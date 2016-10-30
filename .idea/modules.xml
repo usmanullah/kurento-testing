@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/kurento-chroma/kurento-chroma.iml" filepath="$PROJECT_DIR$/kurento-chroma/kurento-chroma.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-crowddetector/kurento-crowddetector.iml" filepath="$PROJECT_DIR$/kurento-crowddetector/kurento-crowddetector.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-group-call/kurento-group-call.iml" filepath="$PROJECT_DIR$/kurento-group-call/kurento-group-call.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-hello-world/kurento-hello-world.iml" filepath="$PROJECT_DIR$/kurento-hello-world/kurento-hello-world.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-hello-world-recording/kurento-hello-world-recording.iml" filepath="$PROJECT_DIR$/kurento-hello-world-recording/kurento-hello-world-recording.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-hello-world-repository/kurento-hello-world-repository.iml" filepath="$PROJECT_DIR$/kurento-hello-world-repository/kurento-hello-world-repository.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-magic-mirror/kurento-magic-mirror.iml" filepath="$PROJECT_DIR$/kurento-magic-mirror/kurento-magic-mirror.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-metadata-example/kurento-metadata-example.iml" filepath="$PROJECT_DIR$/kurento-metadata-example/kurento-metadata-example.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-one2many-call/kurento-one2many-call.iml" filepath="$PROJECT_DIR$/kurento-one2many-call/kurento-one2many-call.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-one2one-call/kurento-one2one-call.iml" filepath="$PROJECT_DIR$/kurento-one2one-call/kurento-one2one-call.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-one2one-call-advanced/kurento-one2one-call-advanced.iml" filepath="$PROJECT_DIR$/kurento-one2one-call-advanced/kurento-one2one-call-advanced.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-one2one-call-recording/kurento-one2one-call-recording.iml" filepath="$PROJECT_DIR$/kurento-one2one-call-recording/kurento-one2one-call-recording.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-platedetector/kurento-platedetector.iml" filepath="$PROJECT_DIR$/kurento-platedetector/kurento-platedetector.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-player/kurento-player.iml" filepath="$PROJECT_DIR$/kurento-player/kurento-player.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-pointerdetector/kurento-pointerdetector.iml" filepath="$PROJECT_DIR$/kurento-pointerdetector/kurento-pointerdetector.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-send-data-channel/kurento-send-data-channel.iml" filepath="$PROJECT_DIR$/kurento-send-data-channel/kurento-send-data-channel.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-show-data-channel/kurento-show-data-channel.iml" filepath="$PROJECT_DIR$/kurento-show-data-channel/kurento-show-data-channel.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kurento-tutorial.iml" filepath="$PROJECT_DIR$/kurento-tutorial.iml" />
+    </modules>
+  </component>
+</project>

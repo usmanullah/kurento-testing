@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.kurento.module:crowddetector:6.6.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/kurento/module/crowddetector/6.6.1-SNAPSHOT/crowddetector-6.6.1-20161007.105127-44.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/kurento/module/crowddetector/6.6.1-SNAPSHOT/crowddetector-6.6.1-20161007.105127-44-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/kurento/module/crowddetector/6.6.1-SNAPSHOT/crowddetector-6.6.1-20161007.105127-44-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.kurento:kurento-jsonrpc-client:6.6.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/kurento/kurento-jsonrpc-client/6.6.1-SNAPSHOT/kurento-jsonrpc-client-6.6.1-20161018.094156-68.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/kurento/kurento-jsonrpc-client/6.6.1-SNAPSHOT/kurento-jsonrpc-client-6.6.1-20161018.094156-68-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/kurento/kurento-jsonrpc-client/6.6.1-SNAPSHOT/kurento-jsonrpc-client-6.6.1-20161018.094156-68-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

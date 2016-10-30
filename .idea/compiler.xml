@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+      <entry name="!?*.aj" />
+    </wildcardResourcePatterns>
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-hello-world-repository" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-hello-world-repository" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-platedetector" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-platedetector" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-crowddetector" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-crowddetector" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-chroma" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-chroma" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-one2one-call-advanced" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-one2one-call-advanced" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-one2one-call-recording" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-one2one-call-recording" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-one2many-call" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-one2many-call" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-group-call" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-group-call" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-player" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-player" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-pointerdetector" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-pointerdetector" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-show-data-channel" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-show-data-channel" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-send-data-channel" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-send-data-channel" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-metadata-example" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-metadata-example" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-hello-world-recording" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-hello-world-recording" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-hello-world" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-hello-world" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-magic-mirror" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-magic-mirror" />
+      </profile>
+      <profile default="false" name="Annotation profile for kurento-one2one-call" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="kurento-one2one-call" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="kurento-chroma" target="1.7" />
+      <module name="kurento-crowddetector" target="1.7" />
+      <module name="kurento-group-call" target="1.7" />
+      <module name="kurento-hello-world" target="1.7" />
+      <module name="kurento-hello-world-recording" target="1.7" />
+      <module name="kurento-hello-world-repository" target="1.7" />
+      <module name="kurento-magic-mirror" target="1.7" />
+      <module name="kurento-metadata-example" target="1.7" />
+      <module name="kurento-one2many-call" target="1.7" />
+      <module name="kurento-one2one-call" target="1.7" />
+      <module name="kurento-one2one-call-advanced" target="1.7" />
+      <module name="kurento-one2one-call-recording" target="1.7" />
+      <module name="kurento-platedetector" target="1.7" />
+      <module name="kurento-player" target="1.8" />
+      <module name="kurento-pointerdetector" target="1.7" />
+      <module name="kurento-send-data-channel" target="1.7" />
+      <module name="kurento-show-data-channel" target="1.7" />
+      <module name="kurento-tutorial" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

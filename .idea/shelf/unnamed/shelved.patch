@@ -1,0 +1,485 @@
+Index: kurento-hello-world/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- kurento-hello-world/pom.xml	(revision 3742be328431facc02262282302b47c2aff9dbc8)
++++ kurento-hello-world/pom.xml	(revision )
+@@ -121,6 +121,14 @@
+ 					<mainClass>${start-class}</mainClass>
+ 				</configuration>
+ 			</plugin>
++			<plugin>
++				<groupId>org.apache.maven.plugins</groupId>
++				<artifactId>maven-compiler-plugin</artifactId>
++				<configuration>
++					<source>1.8</source>
++					<target>1.8</target>
++				</configuration>
++			</plugin>
+ 		</plugins>
+ 
+ 		<resources>
+Index: kurento-hello-world/src/main/java/org/kurento/tutorial/helloworld/HelloWorldApp.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- kurento-hello-world/src/main/java/org/kurento/tutorial/helloworld/HelloWorldApp.java	(revision 3742be328431facc02262282302b47c2aff9dbc8)
++++ kurento-hello-world/src/main/java/org/kurento/tutorial/helloworld/HelloWorldApp.java	(revision )
+@@ -42,7 +42,7 @@
+ 
+   @Bean
+   public KurentoClient kurentoClient() {
+-    return KurentoClient.create();
++    return KurentoClient.create("ws://172.17.0.2:8888/kurento");
+   }
+ 
+   @Override
+Index: kurento-hello-world/src/main/java/org/kurento/tutorial/helloworld/HelloWorldHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- kurento-hello-world/src/main/java/org/kurento/tutorial/helloworld/HelloWorldHandler.java	(revision 3742be328431facc02262282302b47c2aff9dbc8)
++++ kurento-hello-world/src/main/java/org/kurento/tutorial/helloworld/HelloWorldHandler.java	(revision )
+@@ -20,16 +20,12 @@
+ import java.io.IOException;
+ import java.util.concurrent.ConcurrentHashMap;
+ 
+-import org.kurento.client.EventListener;
+-import org.kurento.client.IceCandidate;
+-import org.kurento.client.IceCandidateFoundEvent;
+-import org.kurento.client.KurentoClient;
+-import org.kurento.client.MediaPipeline;
+-import org.kurento.client.WebRtcEndpoint;
++import org.kurento.client.*;
+ import org.kurento.jsonrpc.JsonUtils;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.core.ExceptionDepthComparator;
+ import org.springframework.web.socket.TextMessage;
+ import org.springframework.web.socket.WebSocketSession;
+ import org.springframework.web.socket.handler.TextWebSocketHandler;
+@@ -47,107 +43,154 @@
+  */
+ public class HelloWorldHandler extends TextWebSocketHandler {
+ 
+-  private static final Gson gson = new GsonBuilder().create();
+-  private final Logger log = LoggerFactory.getLogger(HelloWorldHandler.class);
++    private static final Gson gson = new GsonBuilder().create();
++    private final Logger log = LoggerFactory.getLogger(HelloWorldHandler.class);
+ 
+-  @Autowired
+-  private KurentoClient kurento;
++    @Autowired
++    private KurentoClient kurento;
+ 
+-  private final ConcurrentHashMap<String, UserSession> users = new ConcurrentHashMap<>();
++    private final ConcurrentHashMap<String, UserSession> users = new ConcurrentHashMap<>();
+ 
++    String offer = "v=0\r\no=- 0 0 IN IP4 0.0.0.0\r\ns=\r\nc=IN IP4 0.0.0.0\r\nt=0 0\r\n"
++            + "m=audio 9 RTP/AVPF 96\r\na=rtpmap:96 opus/48000/2\r\na=sendonly\r\n"
++            + "m=video 19 RTP/AVPF 103\r\na=rtpmap:103 VP8/90000\r\na=sendonly";
++
++    private static final String ipRegex = "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}";
++    private WebRtcEndpoint webRtcEndpoint;
++    private RtpEndpoint rtpEndpoint;
++
++
+-  @Override
+-  public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+-    JsonObject jsonMessage = gson.fromJson(message.getPayload(), JsonObject.class);
++    @Override
++    public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
++        JsonObject jsonMessage = gson.fromJson(message.getPayload(), JsonObject.class);
+ 
+-    log.debug("Incoming message: {}", jsonMessage);
++        log.debug("Incoming message: {}", jsonMessage);
+ 
+-    switch (jsonMessage.get("id").getAsString()) {
+-      case "start":
+-        start(session, jsonMessage);
+-        break;
+-      case "stop": {
+-        UserSession user = users.remove(session.getId());
+-        if (user != null) {
+-          user.release();
+-        }
+-        break;
+-      }
+-      case "onIceCandidate": {
+-        JsonObject jsonCandidate = jsonMessage.get("candidate").getAsJsonObject();
++        switch (jsonMessage.get("id").getAsString()) {
++            case "start":
++                start(session, jsonMessage);
++                break;
++            case "stop": {
++                UserSession user = users.remove(session.getId());
++                if (user != null) {
++                    user.release();
++                }
++                break;
++            }
++            case "onIceCandidate": {
++                JsonObject jsonCandidate = jsonMessage.get("candidate").getAsJsonObject();
+ 
+-        UserSession user = users.get(session.getId());
+-        if (user != null) {
+-          IceCandidate candidate = new IceCandidate(jsonCandidate.get("candidate").getAsString(),
+-              jsonCandidate.get("sdpMid").getAsString(),
+-              jsonCandidate.get("sdpMLineIndex").getAsInt());
+-          user.addCandidate(candidate);
+-        }
+-        break;
+-      }
+-      default:
+-        sendError(session, "Invalid message with id " + jsonMessage.get("id").getAsString());
+-        break;
+-    }
+-  }
++                UserSession user = users.get(session.getId());
++                if (user != null) {
++                    IceCandidate candidate = new IceCandidate(jsonCandidate.get("candidate").getAsString(),
++                            jsonCandidate.get("sdpMid").getAsString(),
++                            jsonCandidate.get("sdpMLineIndex").getAsInt());
++                    user.addCandidate(candidate);
++                }
++                break;
++            }
++            default:
++                sendError(session, "Invalid message with id " + jsonMessage.get("id").getAsString());
++                break;
++        }
++    }
+ 
+-  private void start(final WebSocketSession session, JsonObject jsonMessage) {
+-    try {
+-      // 1. Media logic (webRtcEndpoint in loopback)
+-      MediaPipeline pipeline = kurento.createMediaPipeline();
++    private void start(final WebSocketSession session, JsonObject jsonMessage) {
++        try {
++            // 1. Media logic (webRtcEndpoint in loopback)
++            MediaPipeline pipeline = kurento.createMediaPipeline();
+-      WebRtcEndpoint webRtcEndpoint = new WebRtcEndpoint.Builder(pipeline).build();
+-      webRtcEndpoint.connect(webRtcEndpoint);
++            webRtcEndpoint = new WebRtcEndpoint.Builder(pipeline).build();
+ 
++            rtpEndpoint = new RtpEndpoint.Builder(pipeline).build();
++            rtpEndpoint.connect(webRtcEndpoint);
++
++
++            String offer = rtpEndpoint.generateOffer();
++            String ans = rtpEndpoint.processAnswer(offer);
++//            String answer = rtpEndpoint.processOffer(this.offer);
++//            String modifiedSdpAns = answer.replaceAll(ipRegex, "172.17.0.2");
++
++            System.out.println("answer = " + offer);
++            System.out.println("modifiedSdpAns = " + ans);
++
++
++
++            rtpEndpoint.addErrorListener(e -> System.out.println(">>>>>>>>>>>>>>> 1" + JsonUtils.toJson(e)));
++            rtpEndpoint.addConnectionStateChangedListener(e -> System.out.println(">>>>>>>>>>>>>>> 2" + JsonUtils.toJson(e)));
++            rtpEndpoint.addElementDisconnectedListener(e -> System.out.println(">>>>>>>>>>>>>>> 3" + JsonUtils.toJson(e)));
++            rtpEndpoint.addMediaFlowInStateChangeListener(e -> System.out.println(">>>>>>>>>>>>>>> 4" + JsonUtils.toJson(e)));
++            rtpEndpoint.addMediaFlowOutStateChangeListener(e -> System.out.println(">>>>>>>>>>>>>>> 5" + JsonUtils.toJson(e)));
++            rtpEndpoint.addMediaSessionStartedListener(e -> System.out.println(">>>>>>>>>>>>>>> 6" + JsonUtils.toJson(e)));
++            rtpEndpoint.addMediaSessionTerminatedListener(e -> System.out.println(">>>>>>>>>>>>>>> 7" + JsonUtils.toJson(e)));
++            rtpEndpoint.addMediaStateChangedListener(e -> System.out.println(">>>>>>>>>>>>>>> 8" + JsonUtils.toJson(e)));
++
++
+-      // 2. Store user session
+-      UserSession user = new UserSession();
+-      user.setMediaPipeline(pipeline);
+-      user.setWebRtcEndpoint(webRtcEndpoint);
+-      users.put(session.getId(), user);
++            // 2. Store user session
++            UserSession user = new UserSession();
++            user.setMediaPipeline(pipeline);
++            user.setWebRtcEndpoint(webRtcEndpoint);
++            users.put(session.getId(), user);
+ 
+-      // 3. SDP negotiation
++            // 3. SDP negotiation
++
++
++            new Thread(info()).start();
++
+-      String sdpOffer = jsonMessage.get("sdpOffer").getAsString();
+-      String sdpAnswer = webRtcEndpoint.processOffer(sdpOffer);
++            String sdpOffer = jsonMessage.get("sdpOffer").getAsString();
++            String sdpAnswer = webRtcEndpoint.processOffer(sdpOffer);
+ 
+-      JsonObject response = new JsonObject();
+-      response.addProperty("id", "startResponse");
+-      response.addProperty("sdpAnswer", sdpAnswer);
++            JsonObject response = new JsonObject();
++            response.addProperty("id", "startResponse");
++            response.addProperty("sdpAnswer", sdpAnswer);
+ 
+-      synchronized (session) {
+-        session.sendMessage(new TextMessage(response.toString()));
+-      }
++            synchronized (session) {
++                session.sendMessage(new TextMessage(response.toString()));
++            }
+ 
+-      // 4. Gather ICE candidates
++            // 4. Gather ICE candidates
+-      webRtcEndpoint.addIceCandidateFoundListener(new EventListener<IceCandidateFoundEvent>() {
+-
+-        @Override
+-        public void onEvent(IceCandidateFoundEvent event) {
+-          JsonObject response = new JsonObject();
+-          response.addProperty("id", "iceCandidate");
+-          response.add("candidate", JsonUtils.toJsonObject(event.getCandidate()));
++            webRtcEndpoint.addIceCandidateFoundListener(event -> {
++                JsonObject response1 = new JsonObject();
++                response1.addProperty("id", "iceCandidate");
++                response1.add("candidate", JsonUtils.toJsonObject(event.getCandidate()));
+-          try {
+-            synchronized (session) {
++                try {
++                    synchronized (session) {
+-              session.sendMessage(new TextMessage(response.toString()));
++                        session.sendMessage(new TextMessage(response1.toString()));
+-            }
+-          } catch (IOException e) {
+-            log.error(e.getMessage());
+-          }
++                    }
++                } catch (IOException e) {
++                    log.error(e.getMessage());
++                }
+-        }
+-      });
++            });
+ 
+-      webRtcEndpoint.gatherCandidates();
++            webRtcEndpoint.gatherCandidates();
+ 
+-    } catch (Throwable t) {
+-      sendError(session, t.getMessage());
+-    }
+-  }
++        } catch (Throwable t) {
++            sendError(session, t.getMessage());
++        }
++    }
++
++    private Runnable info() {
++        return () -> {
++            while (true) {
++                try {
++                    Thread.sleep(3000);
++                    System.out.println("web = " + webRtcEndpoint.getStats());
++                    System.out.println("rtp = " + rtpEndpoint.getStats());
++                } catch (Exception e) {
++                    e.printStackTrace();
++                }
++            }
++        };
++    }
++
+ 
+-  private void sendError(WebSocketSession session, String message) {
+-    try {
+-      JsonObject response = new JsonObject();
+-      response.addProperty("id", "error");
+-      response.addProperty("message", message);
+-      session.sendMessage(new TextMessage(response.toString()));
+-    } catch (IOException e) {
+-      log.error("Exception sending message", e);
+-    }
+-  }
++    private void sendError(WebSocketSession session, String message) {
++        try {
++            JsonObject response = new JsonObject();
++            response.addProperty("id", "error");
++            response.addProperty("message", message);
++            session.sendMessage(new TextMessage(response.toString()));
++        } catch (IOException e) {
++            log.error("Exception sending message", e);
++        }
++    }
+ }
+Index: kurento-player/src/main/java/org/kurento/tutorial/player/PlayerApp.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- kurento-player/src/main/java/org/kurento/tutorial/player/PlayerApp.java	(revision 3742be328431facc02262282302b47c2aff9dbc8)
++++ kurento-player/src/main/java/org/kurento/tutorial/player/PlayerApp.java	(revision )
+@@ -42,7 +42,7 @@
+ 
+   @Bean
+   public KurentoClient kurentoClient() {
+-    return KurentoClient.create();
++    return KurentoClient.create("ws://172.17.0.2:8888/kurento");
+   }
+ 
+   @Override
+Index: kurento-player/src/main/java/org/kurento/tutorial/player/PlayerHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- kurento-player/src/main/java/org/kurento/tutorial/player/PlayerHandler.java	(revision 3742be328431facc02262282302b47c2aff9dbc8)
++++ kurento-player/src/main/java/org/kurento/tutorial/player/PlayerHandler.java	(revision )
+@@ -20,18 +20,7 @@
+ import java.io.IOException;
+ import java.util.concurrent.ConcurrentHashMap;
+ 
+-import org.kurento.client.EndOfStreamEvent;
+-import org.kurento.client.ErrorEvent;
+-import org.kurento.client.EventListener;
+-import org.kurento.client.IceCandidate;
+-import org.kurento.client.IceCandidateFoundEvent;
+-import org.kurento.client.KurentoClient;
+-import org.kurento.client.MediaPipeline;
+-import org.kurento.client.MediaState;
+-import org.kurento.client.MediaStateChangedEvent;
+-import org.kurento.client.PlayerEndpoint;
+-import org.kurento.client.VideoInfo;
+-import org.kurento.client.WebRtcEndpoint;
++import org.kurento.client.*;
+ import org.kurento.commons.exception.KurentoException;
+ import org.kurento.jsonrpc.JsonUtils;
+ import org.slf4j.Logger;
+@@ -63,6 +52,14 @@
+   private final Gson gson = new GsonBuilder().create();
+   private final ConcurrentHashMap<String, UserSession> users = new ConcurrentHashMap<>();
+ 
++
++  private static final String offer = "v=0\r\no=- 0 0 IN IP4 0.0.0.0\r\ns=\r\nc=IN IP4 0.0.0.0\r\nt=0 0\r\n"
++          + "m=audio 9 RTP/AVPF 96\r\na=rtpmap:96 opus/48000/2\r\na=sendonly\r\n"
++          + "m=video 9 RTP/AVPF 103\r\na=rtpmap:103 VP8/90000\r\na=sendonly";
++
++  private static final String ipRegex = "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}";
++
++
+   @Override
+   public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+     JsonObject jsonMessage = gson.fromJson(message.getPayload(), JsonObject.class);
+@@ -110,12 +107,30 @@
+     WebRtcEndpoint webRtcEndpoint = new WebRtcEndpoint.Builder(pipeline).build();
+     user.setWebRtcEndpoint(webRtcEndpoint);
+     String videourl = jsonMessage.get("videourl").getAsString();
++
+     final PlayerEndpoint playerEndpoint = new PlayerEndpoint.Builder(pipeline, videourl).build();
++
++    final RtpEndpoint rtpEndpoint = new RtpEndpoint.Builder(pipeline).build();
++
++    rtpEndpoint.connect(webRtcEndpoint);
++
++
++    String rtpAns = rtpEndpoint.processOffer(offer);
++    String modifedAns = rtpAns.replaceAll(ipRegex, "172.17.0.2");
++
++    System.out.println("offer = " + offer);
++    System.out.println("rtpAns = " + rtpAns);
++    System.out.println("modifedAns = " + modifedAns);
++
+     user.setPlayerEndpoint(playerEndpoint);
+     users.put(session.getId(), user);
+ 
+-    playerEndpoint.connect(webRtcEndpoint);
+ 
++//    playerEndpoint.connect(webRtcEndpoint);
++
++
++    new Thread(runner(rtpEndpoint, webRtcEndpoint)).start();
++
+     // 2. WebRtcEndpoint
+     // ICE candidates
+     webRtcEndpoint.addIceCandidateFoundListener(new EventListener<IceCandidateFoundEvent>() {
+@@ -138,6 +153,9 @@
+     String sdpOffer = jsonMessage.get("sdpOffer").getAsString();
+     String sdpAnswer = webRtcEndpoint.processOffer(sdpOffer);
+ 
++    System.out.println("sdpOffer = " + sdpOffer);
++    System.out.println("sdpAnswer = " + sdpAnswer);
++
+     JsonObject response = new JsonObject();
+     response.addProperty("id", "startResponse");
+     response.addProperty("sdpAnswer", sdpAnswer);
+@@ -181,6 +199,31 @@
+     });
+ 
+     playerEndpoint.play();
++  }
++
++  private Runnable runner(final RtpEndpoint rtpEndpoint, final WebRtcEndpoint webRtcEndpoint) {
++    return new Runnable() {
++      @Override
++      public void run() {
++        while (true) {
++          try {
++            Thread.sleep(5000);
++          } catch (InterruptedException e) {
++
++
++          }
++          try {
++            System.out.println("rtpEndpoint.isMediaFlowingIn(MediaType.VIDEO) = " + rtpEndpoint.isMediaFlowingIn(MediaType.VIDEO));
++            System.out.println("rtpEndpoint.isMediaFlowingOut(MediaType.VIDEO) = " + rtpEndpoint.isMediaFlowingOut(MediaType.VIDEO));
++
++            System.out.println("webRtcEndpoint.isMediaFlowingIn(MediaType.VIDEO) = " + webRtcEndpoint.isMediaFlowingIn(MediaType.VIDEO));
++            System.out.println("webRtcEndpoint.isMediaFlowingOut(MediaType.VIDEO) = " + webRtcEndpoint.isMediaFlowingOut(MediaType.VIDEO));
++          }catch (Exception e) {
++
++          }
++        }
++      }
++    };
+   }
+ 
+   private void pause(String sessionId) {
+Index: kurento-hello-world-recording/src/main/java/org/kurento/tutorial/helloworld/HelloWorldRecApp.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- kurento-hello-world-recording/src/main/java/org/kurento/tutorial/helloworld/HelloWorldRecApp.java	(revision 3742be328431facc02262282302b47c2aff9dbc8)
++++ kurento-hello-world-recording/src/main/java/org/kurento/tutorial/helloworld/HelloWorldRecApp.java	(revision )
+@@ -41,7 +41,7 @@
+ 
+   @Bean
+   public KurentoClient kurentoClient() {
+-    return KurentoClient.create();
++    return KurentoClient.create("ws://172.17.0.2:8888/kurento");
+   }
+ 
+   @Override
+Index: kurento-hello-world-recording/src/main/java/org/kurento/tutorial/helloworld/HelloWorldRecHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- kurento-hello-world-recording/src/main/java/org/kurento/tutorial/helloworld/HelloWorldRecHandler.java	(revision 3742be328431facc02262282302b47c2aff9dbc8)
++++ kurento-hello-world-recording/src/main/java/org/kurento/tutorial/helloworld/HelloWorldRecHandler.java	(revision )
+@@ -17,21 +17,7 @@
+ 
+ import java.io.IOException;
+ 
+-import org.kurento.client.EndOfStreamEvent;
+-import org.kurento.client.ErrorEvent;
+-import org.kurento.client.EventListener;
+-import org.kurento.client.IceCandidate;
+-import org.kurento.client.IceCandidateFoundEvent;
+-import org.kurento.client.KurentoClient;
+-import org.kurento.client.MediaPipeline;
+-import org.kurento.client.MediaProfileSpecType;
+-import org.kurento.client.MediaType;
+-import org.kurento.client.PausedEvent;
+-import org.kurento.client.PlayerEndpoint;
+-import org.kurento.client.RecorderEndpoint;
+-import org.kurento.client.RecordingEvent;
+-import org.kurento.client.StoppedEvent;
+-import org.kurento.client.WebRtcEndpoint;
++import org.kurento.client.*;
+ import org.kurento.jsonrpc.JsonUtils;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.kurento.module:pointerdetector:6.6.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/kurento/module/pointerdetector/6.6.1-SNAPSHOT/pointerdetector-6.6.1-20161007.104656-40.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/kurento/module/pointerdetector/6.6.1-SNAPSHOT/pointerdetector-6.6.1-20161007.104656-40-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/kurento/module/pointerdetector/6.6.1-SNAPSHOT/pointerdetector-6.6.1-20161007.104656-40-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

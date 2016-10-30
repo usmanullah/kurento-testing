@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.kurento:kurento-utils-js:6.6.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/kurento/kurento-utils-js/6.6.1-SNAPSHOT/kurento-utils-js-6.6.1-20161026.124203-7.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/kurento/kurento-utils-js/6.6.1-SNAPSHOT/kurento-utils-js-6.6.1-20161026.124203-7-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/kurento/kurento-utils-js/6.6.1-SNAPSHOT/kurento-utils-js-6.6.1-20161026.124203-7-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
