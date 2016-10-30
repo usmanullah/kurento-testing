@@ -42,7 +42,7 @@ public class PlayerApp implements WebSocketConfigurer {
 
   @Bean
   public KurentoClient kurentoClient() {
-    return KurentoClient.create("ws://52.212.93.78:8888/kurento");
+    return KurentoClient.create();
   }
 
   @Override
